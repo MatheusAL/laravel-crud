@@ -13,8 +13,16 @@ use App\Http\Controllers\ClientController;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('', function () {
+    return view('homepage');
+})->name('homepage.index');
 
 Route::get('/clients', [ClientController::class, 'index'])->name('clients.index');
+
+Route::post('/clients/create', [ClientController::class, 'store'])->name('clients.store');
+
+Route::get('/clients/search', [ClientController::class, 'search'])->name('clients.search');
+
+Route::post('/clients/get', [ClientController::class, 'get'])->name('clients.get');
+
+Route::delete('/clients/delete/{client}', [ClientController::class, 'delete'])->name('clients.delete');

@@ -15,9 +15,11 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('cpf')->unique();
-            $table->string('birth');
-            $table->string('sex');
-            $table->string('address');
+            $table->string('birth')->nullable();
+            $table->string('sex')->nullable();
+            $table->string('address')->nullable();
+            $table->string('city')->nullable();
+            $table->string('state')->nullable();
             $table->timestamps();
         });
     }

@@ -14,6 +14,8 @@ class Client extends Model
         'cpf',
         'birth',
         'sex',
-        'address'
+        'address',
+        'city',
+        'state'
     ];
 }

@@ -4,28 +4,29 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     @vite('resources/css/app.css')
-    <title>Clientes</title>
+    <title>Consulta Clientes</title>
 </head>
+
 <body class="bg-blue-100">
 
     <section class="bg-white m-8 border rounded border-black p-5">
         <div class="flex justify-between">
-            <img src="logo_upd8.png">
+            <img src="/logo_upd8.png">
             <a class="flex self-center" href="{{route('homepage.index')}}"><h1 class="text-xl">Retornar ao menu</h1></a>
         </div>
         <div class="border rounded border-black p-3">
-            <h3 class="text-purple-900">Cadastro Cliente</h3>
-            <form method="POST" action="{{route('clients.store')}}">
+            <h3 class="text-purple-900 mb-5">Consulta Cliente</h3>
+            <form method="POST" action="{{route('clients.get')}}">
             @csrf
             @method('post')
             <div class="grid gap-3 mb-6 md:grid-cols-4 sm:grid-cols-2">
                 <div>
                     <label for="cpf" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">CPF:</label>
-                    <input type="text" name="cpf" name="cpf" id="cpf" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="xxxxxxxxxxxx">
+                    <input type="text" name="cpf" name="cpf" id="cpf" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="xxxxxxxxxxxx" >
                 </div>
                 <div>
                     <label for="name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Nome:</label>
-                    <input type="text" id="name" name="name" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="">
+                    <input type="text" id="name" name="name" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="" >
                 </div>
                 <div>
                     <label for="birth" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Data de Nascimento:</label>
@@ -51,12 +52,12 @@
 
                 <div class="col-span-2">
                     <label for="address" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Endereço</label>
-                    <input type="text" id="address" name="address" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" required>
+                    <input type="text" id="address" name="address" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                 </div>
                 <div>
                     <label for="state" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Estado</label>
                     <select id="state" name="state" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600">
-                    <option selected>Selecione</option>
+                        <option selected>Selecione</option>
                         <option value="AC">Acre</option>
                         <option value="AL">Alagoas</option>
                         <option value="AP">Amapá</option>
@@ -94,16 +95,61 @@
                 </div> 
             </div>
             <div class="flex justify-end">
-                @isset($success)
-                    <h3 class="text-green-600">{{ $success }}</h3>
-                @endisset
-                <button type="submit" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full mx-2 sm:w-auto px-5 py-2.5 text-center">Salvar</button>
+                <button type="submit" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full mx-2 sm:w-auto px-5 py-2.5 text-center">Pesquisar</button>
                 <button type="reset" class="text-white bg-gray-700 hover:bg-gray-800 focus:ring-4 focus:outline-none focus:ring-gray-300 font-medium rounded-lg text-sm w-full mx-2 sm:w-auto px-5 py-2.5 text-center">Limpar</button>
             </div>
             </form>
         </div>
+        @isset($clients)
+        <div class="border rounded border-black p-3 mt-8">        
+            
+            <div class="results-header">
+                <h3 class="text-purple-900 mb-5">Resultados da pesquisa</h3>
+                @isset($success)
+                    <h3 class="text-green-600">{{ $success }}</h3>
+                @endisset
+            </div>
+            <table class="table-auto w-full rounded">
+                <thead class="h-10 border border-black bg-gray-200 dark:bg-gray-700 dark:text-gray-400">
+                    <tr>
+                    <th class="border border-black"></th>
+                    <th class="border border-black"></th>
+                    <th class="border border-black">Cliente</th>
+                    <th class="border border-black">CPF</th>
+                    <th class="border border-black">Data Nasc.</th>
+                    <th class="border border-black">Estado</th>
+                    <th class="border border-black">Cidade</th>
+                    <th class="border border-black">Sexo</th>
+                    </tr>
+                </thead>
+                <tbody class="border border-black text-center">
+                    @foreach ($clients as $client)
+                        <tr class="py-2">
+                            <td class="border border-black"><button class="bg-green-800 hover:bg-green-900 p-2.5 text-white focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-9/12">Editar</button></td>
+                            <td class="border border-black ">
+                                <form method="POST" action="{{route('clients.delete', ['client' => $client->id])}}" >
+                                    @csrf
+                                    @method('delete')
+                                    <button type="submit" class="bg-red-800  hover:bg-red-900 p-2.5 text-white focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-9/12">
+                                        Excluir
+                                    </button>
+                                </form>
+                            </td>
+                            <td class="border border-black">{{ $client->name }}</td>
+                            <td class="border border-black">{{ $client->cpf }}</td>
+                            <td class="border border-black">{{ $client->birth }}</td>
+                            <td class="border border-black">{{ $client->state }}</td>
+                            <td class="border border-black">{{ $client->city }}</td>
+                            <td class="border border-black">{{ $client->sex }}</td>
+                        </tr>    
+                    @endforeach
+                </tbody>
+            </table>
+        </div>
+        @endisset
     </section>
 </body>
+
 <script>
     document.getElementById('state').addEventListener('change', function() {
         var selectedState = this.value;
