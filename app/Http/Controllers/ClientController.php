@@ -9,17 +9,47 @@ use Illuminate\Support\Facades\DB;
 class ClientController extends Controller
 {
     //
+    public $states = [
+        'AC' => 'Acre',
+        'AL' => 'Alagoas',
+        'AP' => 'Amapá',
+        'AM' => 'Amazonas',
+        'BA' => 'Bahia',
+        'CE' => 'Ceará',
+        'DF' => 'Distrito Federal',
+        'ES' => 'Espírito Santo',
+        'GO' => 'Goiás',
+        'MA' => 'Maranhão',
+        'MT' => 'Mato Grosso',
+        'MS' => 'Mato Grosso do Sul',
+        'MG' => 'Minas Gerais',
+        'PA' => 'Pará',
+        'PB' => 'Paraíba',
+        'PR' => 'Paraná',
+        'PE' => 'Pernambuco',
+        'PI' => 'Piauí',
+        'RJ' => 'Rio de Janeiro',
+        'RN' => 'Rio Grande do Norte',
+        'RS' => 'Rio Grande do Sul',
+        'RO' => 'Rondônia',
+        'RR' => 'Roraima',
+        'SC' => 'Santa Catarina',
+        'SP' => 'São Paulo',
+        'SE' => 'Sergipe',
+        'TO' => 'Tocantins',
+    ];
+    
     public function index() {
-        return view('clients.index');
+        return view('clients.index', ['states'=> $this->states]);
     }
 
     public function create() {
-        return view('clients.index');
+        return view('clients.index', ['states'=> $this->states]);
     }
 
     public function search() {
         $clients = DB::table('clients')->get();
-        return view('clients.search', ['clients'=> $clients]);
+        return view('clients.search', ['clients'=> $clients, 'states' => $this->states]);
     }
 
     public function store(Request $request) {
@@ -74,11 +104,31 @@ class ClientController extends Controller
         }
         $clients = $clients->get();
  
-        return view('clients.search', ['clients' => $clients]);
+        return view('clients.search', ['clients' => $clients, 'states' => $this->states]);
     }
 
     public function delete(Client $client) {
         $client->delete();
         return redirect(route('clients.search'))->with('success', 'Cliente excluído com sucesso');
+    }
+
+
+    public function edit(Client $client) {
+        return view('clients.edit', ['client' => $client, 'states' => $this->states]);
+    }
+
+    public function update(Client $client, Request $request) {
+        $client_data = $request->validate([
+            'name' => 'required',
+            'cpf' =>  'required',
+            'address' => 'required',
+            'birth' => 'required',
+            'state' => 'required',
+            'city' => 'required',
+            'sex' => 'required',
+        ]);
+        $client->update($client_data);
+        
+        return redirect(route('clients.edit', ['client' => $client]))->with('success', 'Cliente editado com sucesso');
     }
 }

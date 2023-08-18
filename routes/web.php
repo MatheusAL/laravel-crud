@@ -26,3 +26,7 @@ Route::get('/clients/search', [ClientController::class, 'search'])->name('client
 Route::post('/clients/get', [ClientController::class, 'get'])->name('clients.get');
 
 Route::delete('/clients/delete/{client}', [ClientController::class, 'delete'])->name('clients.delete');
+
+Route::get('/clients/edit/{client}', [ClientController::class, 'edit'])->name('clients.edit');
+
+Route::put('/clients/update/{client}', [ClientController::class, 'update'])->name('clients.update');
